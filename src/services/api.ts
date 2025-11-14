@@ -341,7 +341,12 @@ const apiFetch = async <T,>(endpoint: string, options: RequestInit = {}): Promis
 
 // --- EXPORTED API FUNCTIONS ---
 export const login = async (email: string, pass: string): Promise<User> => {
-    if (API_BASE === '/mock') return mockApi.login(email, pass);
+    console.log('[API.login] API_BASE:', API_BASE);
+    if (API_BASE === '/mock') {
+      console.log('[API.login] Using mock API');
+      return mockApi.login(email, pass);
+    }
+    console.log('[API.login] Using real backend');
     try {
       const { user, token } = await apiFetch<{ token: string; user: User }>('/auth/login.php', { method: 'POST', body: JSON.stringify({ email, password: pass }) });
       if (token) localStorage.setItem('token', token);
