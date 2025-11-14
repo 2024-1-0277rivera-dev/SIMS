@@ -5,16 +5,29 @@ import { UserRole } from './types.ts';
 // directly at the backend (example: VITE_API_BASE="http://localhost/SIMS4/api").
 // When deployed to a static host (like Firebase Hosting or GitHub Pages) we cannot run PHP,
 // so default to the mock API if the host is github.io, firebase.web.app, or VITE_API_BASE is set to '/mock'.
-const envApiBase = ((import.meta as any).env?.VITE_API_BASE as string) || '';
-const isGithubPages = typeof window !== 'undefined' && window.location.hostname.endsWith('github.io');
-const isFirebaseHosting = typeof window !== 'undefined' && window.location.hostname.endsWith('web.app');
-export const API_BASE = envApiBase === '/mock' || (!envApiBase && (isGithubPages || isFirebaseHosting))
-  ? '/mock'
-  : (envApiBase || (typeof window !== 'undefined' ? window.location.origin + '/api' : '/api'));
 
-console.log('[API] Detected hostname:', typeof window !== 'undefined' ? window.location.hostname : 'N/A');
-console.log('[API] Is Firebase:', isFirebaseHosting);
-console.log('[API] API_BASE:', API_BASE);
+// Runtime detection: check hostname FIRST to ensure Firebase/GitHub Pages always use /mock
+function getApiBase(): string {
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : '';
+  const isGithubPages = hostname.endsWith('github.io');
+  const isFirebaseHosting = hostname.endsWith('web.app');
+  const envApiBase = ((import.meta as any).env?.VITE_API_BASE as string) || '';
+  
+  console.log('[API] Detected hostname:', hostname);
+  console.log('[API] Is GitHub Pages:', isGithubPages);
+  console.log('[API] Is Firebase Hosting:', isFirebaseHosting);
+  console.log('[API] Env VITE_API_BASE:', envApiBase);
+  
+  // Priority: 1. Env file, 2. GitHub Pages/Firebase detection, 3. Default to backend
+  const result = envApiBase === '/mock' || (!envApiBase && (isGithubPages || isFirebaseHosting))
+    ? '/mock'
+    : (envApiBase || (typeof window !== 'undefined' ? window.location.origin + '/api' : '/api'));
+  
+  console.log('[API] Final API_BASE:', result);
+  return result;
+}
+
+export const API_BASE = getApiBase();
 
 export const ROLES = {
   USER: UserRole.USER,
