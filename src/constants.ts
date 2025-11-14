@@ -23,5 +23,3 @@ export const AMARANTH_JOKERS_TEAM_ID = 't5';
 //   "predeploy": "npm run build",
 //   "deploy": "gh-pages -d dist"
 // }
-
-VITE_API_BASE=/mock
