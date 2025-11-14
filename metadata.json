@@ -1,0 +1,5 @@
+{
+  "name": "SIMS - Sports Information Management System",
+  "description": "A responsive frontend for a Sports Information Management System (SIMS) featuring role-based access, real-time leaderboards, event management, and player profiles. Built with React, TypeScript, and Tailwind CSS.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,6 @@
+# .htaccess
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# route /api/... to /api/index.php?path=...
+RewriteRule ^api/(.*)$ api/$1 [L,QSA]
